@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1A83B394-E61B-4730-80EF-ED6AC00820B1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MJS.Framework.Data</RootNamespace>
+    <AssemblyName>MJS.Framework.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>mjs.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CO\CODataClass.cs" />
+    <Compile Include="CO\CODataMapper.cs" />
+    <Compile Include="Enums\DataType.cs" />
+    <Compile Include="Extensions\DataClassKernel.cs" />
+    <Compile Include="Extensions\XmlElementExtension.cs" />
+    <Compile Include="Extensions\XPathNavigatorExtension.cs" />
+    <Compile Include="Interfaces\IDataClass.cs" />
+    <Compile Include="Interfaces\IDataClassList.cs" />
+    <Compile Include="Interfaces\IDataDictionary.cs" />
+    <Compile Include="Metadata\DatabaseFieldAttribute.cs" />
+    <Compile Include="Metadata\DatabaseForeignKeyAttribute.cs" />
+    <Compile Include="Metadata\DatabaseKeyAttribute.cs" />
+    <Compile Include="Metadata\DatabaseTableAttribute.cs" />
+    <Compile Include="Metadata\DatabaseUniqueAttribute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlScriptUtils.cs" />
+    <Compile Include="Types\DataClass.cs" />
+    <Compile Include="Types\DataClassList.cs" />
+    <Compile Include="Types\DataDictionaryEntry.cs" />
+    <Compile Include="Types\Entity.cs" />
+    <Compile Include="Types\FieldDescription.cs" />
+    <Compile Include="Types\KernelException.cs" />
+    <Compile Include="Types\PropertyByName.cs" />
+    <Compile Include="Types\TableDescription.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MJS.Framework.Base\MJS.Framework.Base.csproj">
+      <Project>{5f6d341f-4f0f-4a47-b4d2-7bdfbd88085e}</Project>
+      <Name>MJS.Framework.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MJS.Framework.Communication\MJS.Framework.Communication.csproj">
+      <Project>{de54fdad-e31a-4a6b-a9fe-41e09b043836}</Project>
+      <Name>MJS.Framework.Communication</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mjs.pfx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

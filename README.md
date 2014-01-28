@@ -1,4 +1,4 @@
 MJ.Framework
 ============
 
-A framework for building applications
+A framework for building applications.

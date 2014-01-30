@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.XPath;
 
 namespace MJS.Framework.View.Types
 {
@@ -19,6 +20,12 @@ namespace MJS.Framework.View.Types
         private Type _entityType;
         private byte[] _blob;
         private XmlDocument _data;
+
+        private bool _changed = false;
+        public bool Changed
+        {
+            get { return _changed;  }
+        }
 
         public bool Dirty
         {
@@ -44,6 +51,43 @@ namespace MJS.Framework.View.Types
 
         public void Save()
         {
+        }
+
+        private void SetValue(string xpath, string value)
+        {
+            XmlNode node = _data.SelectSingleNode(xpath);
+            if (node == null)
+            {
+                AddValue(xpath, value);
+            }
+            else
+            {
+                node.InnerText = value;
+                _changed = true;
+            }
+        }
+
+        private void AddValue(string xpath, string value)
+        {
+            string[] xpathParts = xpath.Split('/');
+
+            int index = xpathParts.Length;
+            XPathNavigator dataNav = _data.CreateNavigator();
+            XPathNavigator nav = null;
+            while (nav == null && index > 0)
+            {
+                nav = dataNav.SelectSingleNode(string.Join("/", xpathParts, 0, index));
+            }
+            if (nav == null)
+            {
+            }
+
+            //XPathNavigator nav = _data.CreateNavigator();
+            //XPathNavigator temp = nav;
+            //while (temp != null)
+            //{
+            //    temp = temp.SelectSingleNode()
+            //}
         }
     }
 }

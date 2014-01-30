@@ -10,17 +10,36 @@ namespace MJS.Framework.Base.Extensions
     {
         public static XPathNavigator Add(this XPathNavigator me, string path, string value = null)
         {
-            while (path.StartsWith("/"))
+            try
             {
-                path = path.Substring(1);
+                while (path.StartsWith("/"))
+                {
+                    path = path.Substring(1);
+                }
+                if (path.StartsWith("@"))
+                {
+                    me.CreateAttribute(null, path.Substring(1), null, value);
+                }
+                else if (path.EndsWith("]"))
+                {
+                    string tempPath = path.Substring(0, path.IndexOf("["));
+                    while (me.SelectSingleNode(path) == null)
+                    {
+                        me.AppendChildElement(null, tempPath, null, null);
+                    }
+                    if (value != null)
+                    {
+                        me.SelectSingleNode(path).SetValue(value);
+                    }
+                }
+                else
+                {
+                    me.AppendChildElement(null, path, null, value);
+                }
             }
-            if (path.StartsWith("@"))
+            catch(Exception ex)
             {
-                me.CreateAttribute(null, path.Substring(1), null, value);
-            }
-            else
-            {
-                me.AppendChildElement(null, path, null, value);
+                Console.WriteLine("{0}\n{1}", ex.Message, ex.StackTrace);
             }
             return me.SelectSingleNode(path);
         }

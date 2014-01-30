@@ -18,6 +18,10 @@ namespace FrameWorkTest
             vo.SetValue("/root/age", "39");
             vo.SetValue("/root/children/item/@id", Guid.NewGuid().ToString());
             vo.SetValue("/root/children/item/name", "Aksel Steffansen");
+            vo.SetValue("/root/children/item[3]/name", "Palle");
+            vo.SetValue("/root/children[14]/item[3]/name", "Palle");
+            vo.SetValue("/root/children[14]/item[3]/name", "Jens");
+            vo.SetValue("/root/children[14]/@item/name", "Jens");
             Console.WriteLine(vo);
 
             Console.WriteLine(vo.GetValue("/root/name"));
@@ -25,6 +29,8 @@ namespace FrameWorkTest
             Console.WriteLine(vo.GetValue("/root/age"));
             Console.WriteLine(vo.GetValue("/root/children/item/@id"));
             Console.WriteLine(vo.GetValue("/root/children/item/name"));
+            Console.WriteLine(vo.GetValue("/root/children/item[3]/name"));
+            Console.WriteLine(vo.GetValue("/root/children[14]/item[3]/name"));
             Console.WriteLine("- " + vo.GetValue("/root/childrden/item/name"));
 
             

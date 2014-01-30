@@ -81,7 +81,6 @@ namespace MJS.Framework.View.Types
 
         private void AddValue(string xpath, string value)
         {
-            Console.WriteLine("Add {0} = {1}", xpath, value);
             List<string> xpathParts = new List<string>();
             xpathParts.AddRange(xpath.Split('/'));
             if (string.IsNullOrWhiteSpace(xpathParts[0]))
@@ -92,14 +91,11 @@ namespace MJS.Framework.View.Types
 
             int index = xpathParts.Count;
             XPathNavigator dataNav = _data.CreateNavigator();
-            Console.WriteLine(dataNav.Name);
             XPathNavigator nav = null;
             while (nav == null && index > 0)
             {
                 string tempXpath = string.Join("/", xpathParts.ToArray(), 0, index);
-                Console.WriteLine(index + " " + tempXpath);
                 nav = dataNav.SelectSingleNode(tempXpath);
-                Console.WriteLine(index + " " + tempXpath + " = " + nav);
                 if (nav == null)
                 {
                     index--;
@@ -115,7 +111,10 @@ namespace MJS.Framework.View.Types
                 nav = nav.Add(xpathParts[index]);
                 index++;
             }
-            nav.SetValue(value);
+            if (nav != null)
+            {
+                nav.SetValue(value);
+            }
             
         }
     }

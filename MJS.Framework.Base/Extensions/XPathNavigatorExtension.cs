@@ -14,7 +14,14 @@ namespace MJS.Framework.Base.Extensions
             {
                 path = path.Substring(1);
             }
-            me.AppendChildElement(null, path, null, value);
+            if (path.StartsWith("@"))
+            {
+                me.CreateAttribute(null, path.Substring(1), null, value);
+            }
+            else
+            {
+                me.AppendChildElement(null, path, null, value);
+            }
             return me.SelectSingleNode(path);
         }
     }

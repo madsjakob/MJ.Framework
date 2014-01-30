@@ -14,8 +14,9 @@ namespace FrameWorkTest
             ViewObject vo = new ViewObject();
 
             vo.SetValue("/root/name", "Mads Jakob Steffansen");
-            //vo.SetValue("/root/@id", Guid.NewGuid().ToString());
+            vo.SetValue("/root/@id", Guid.NewGuid().ToString());
             vo.SetValue("/root/age", "39");
+            vo.SetValue("/root/children/item/@id", Guid.NewGuid().ToString());
             vo.SetValue("/root/children/item/name", "Aksel Steffansen");
             Console.WriteLine(vo);
             Console.Read();

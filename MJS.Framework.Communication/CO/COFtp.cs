@@ -20,8 +20,8 @@ namespace MJS.Framework.Communication.CO
         private string _server;
         private string _username;
         private string _password;
-        private string _currentSubPath;
-        private bool _usePassive;
+        private string _currentSubPath = null;
+        private bool _usePassive = false;
 
         public bool Upload(string localFilename, string targetFilename)
         {

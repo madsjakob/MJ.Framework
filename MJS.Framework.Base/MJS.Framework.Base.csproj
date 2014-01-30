@@ -55,6 +55,7 @@
     <Compile Include="CO\CODatabase.cs" />
     <Compile Include="CO\CODataContext.cs" />
     <Compile Include="Delegates\LogFunction.cs" />
+    <Compile Include="Extensions\XPathNavigatorExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\IniFile.cs" />
     <Compile Include="Types\ParameterTable.cs" />

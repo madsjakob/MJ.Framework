@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using MJS.Framework.Base.Extensions;
 
 namespace MJS.Framework.View.Types
 {
@@ -19,7 +20,12 @@ namespace MJS.Framework.View.Types
         private Guid _id;
         private Type _entityType;
         private byte[] _blob;
-        private XmlDocument _data;
+        private XmlDocument _data = new XmlDocument();
+
+        public override string ToString()
+        {
+            return _data.OuterXml;
+        }
 
         private bool _changed = false;
         public bool Changed
@@ -53,7 +59,7 @@ namespace MJS.Framework.View.Types
         {
         }
 
-        private void SetValue(string xpath, string value)
+        public void SetValue(string xpath, string value)
         {
             XmlNode node = _data.SelectSingleNode(xpath);
             if (node == null)
@@ -69,25 +75,42 @@ namespace MJS.Framework.View.Types
 
         private void AddValue(string xpath, string value)
         {
-            string[] xpathParts = xpath.Split('/');
+            Console.WriteLine("Add {0} = {1}", xpath, value);
+            List<string> xpathParts = new List<string>();
+            xpathParts.AddRange(xpath.Split('/'));
+            if (string.IsNullOrWhiteSpace(xpathParts[0]))
+            {
+                xpathParts.RemoveAt(0);
+                xpathParts[0] = "/" + xpathParts[0];
+            }
 
-            int index = xpathParts.Length;
+            int index = xpathParts.Count;
             XPathNavigator dataNav = _data.CreateNavigator();
+            Console.WriteLine(dataNav.Name);
             XPathNavigator nav = null;
             while (nav == null && index > 0)
             {
-                nav = dataNav.SelectSingleNode(string.Join("/", xpathParts, 0, index));
+                string tempXpath = string.Join("/", xpathParts.ToArray(), 0, index);
+                Console.WriteLine(index + " " + tempXpath);
+                nav = dataNav.SelectSingleNode(tempXpath);
+                Console.WriteLine(index + " " + tempXpath + " = " + nav);
+                if (nav == null)
+                {
+                    index--;
+                }
             }
+            
             if (nav == null)
             {
+                nav = dataNav;
             }
-
-            //XPathNavigator nav = _data.CreateNavigator();
-            //XPathNavigator temp = nav;
-            //while (temp != null)
-            //{
-            //    temp = temp.SelectSingleNode()
-            //}
+            while (index < xpathParts.Count)
+            {
+                nav = nav.Add(xpathParts[index]);
+                index++;
+            }
+            nav.SetValue(value);
+            
         }
     }
 }

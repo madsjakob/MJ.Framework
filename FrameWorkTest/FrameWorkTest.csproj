@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5DFD0F6D-2FE1-412D-BB26-EEF79C2FC0D7}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{589DF9EA-829A-4BCD-88A3-2B2D4AB5F74C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MJS.Framework.View</RootNamespace>
-    <AssemblyName>MJS.Framework.View</AssemblyName>
+    <RootNamespace>FrameWorkTest</RootNamespace>
+    <AssemblyName>FrameWorkTest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -39,14 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Types\DataCache.cs" />
-    <Compile Include="Types\ViewObject.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MJS.Framework.Base\MJS.Framework.Base.csproj">
       <Project>{5f6d341f-4f0f-4a47-b4d2-7bdfbd88085e}</Project>
       <Name>MJS.Framework.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MJS.Framework.View\MJS.Framework.View.csproj">
+      <Project>{5dfd0f6d-2fe1-412d-bb26-eef79c2fc0d7}</Project>
+      <Name>MJS.Framework.View</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

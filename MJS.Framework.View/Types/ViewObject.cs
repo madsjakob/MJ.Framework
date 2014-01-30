@@ -73,6 +73,12 @@ namespace MJS.Framework.View.Types
             }
         }
 
+        public string GetValue(string xpath)
+        {
+            XPathNavigator nav = _data.CreateNavigator();
+            return nav.GetValue(xpath);
+        }
+
         private void AddValue(string xpath, string value)
         {
             Console.WriteLine("Add {0} = {1}", xpath, value);

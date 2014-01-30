@@ -24,5 +24,16 @@ namespace MJS.Framework.Base.Extensions
             }
             return me.SelectSingleNode(path);
         }
+
+        public static string GetValue(this XPathNavigator me, string path)
+        {
+            string result = null;
+            XPathNavigator nav = me.SelectSingleNode(path);
+            if (nav != null)
+            {
+                result = nav.Value;
+            }
+            return result;
+        }
     }
 }

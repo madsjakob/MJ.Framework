@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace FrameWorkTest
 {
-    [DataObject("Sag", "SagID", "Opdateret", BlobField = "Blobrec")]
     public class VOSag : ViewObject<DDSag>
     {
         public VOSag(Guid id) : base(id)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FrameWorkTest
 {
-    [DataObject("Sag", "SagID", BlobField = "Blobrec")]
+    [DataObject("Sag", "SagID", "Opdateret", BlobField = "Blobrec")]
     public class DOSag : ViewObject
     {
         

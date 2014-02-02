@@ -1,4 +1,5 @@
 ﻿using MJS.Framework.Base.Types;
+using MJS.Framework.Base.Utils;
 using MJS.Framework.Communication.CO;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MJS.Framework.View.Types
 {
-    public class DataCache : Dictionary<Guid, ViewObject>
+    public class DataCache : Dictionary<Guid, DataCacheObject>
     {
         // Private constructor to ensure singleton
         private DataCache()
@@ -32,17 +33,15 @@ namespace MJS.Framework.View.Types
 
         private Dictionary<Guid, DataObjectAttribute> _mappingCache = new Dictionary<Guid,DataObjectAttribute>();
 
-        public ViewObject LoadEntity<T>(Guid id)
+        private DataCacheObject GetEntity(Type dataType, Guid id)
         {
-            if (!_cache.ContainsKey(id) || _cache[id].Dirty)
+            DataCacheObject result = null;
+            if(EntityDirty(dataType, id))
             {
-                // Load entity
+                LoadEntity(dataType, id);
             }
-            return _cache[id];
-        }
-
-        public void EditEntity<T>(Guid id)
-        { 
+            result = this[id];
+            return result;
         }
 
         private bool LoadEntity(Type dataType, Guid id)
@@ -61,6 +60,41 @@ namespace MJS.Framework.View.Types
                 dco.DataType = dataType;
                 dco.Loaded = DateTime.Now;
                 dco.Blobdata = (byte[])row[attribute.BlobField];
+                if (ContainsKey(id))
+                {
+                    this[id] = dco;
+                }
+                else
+                {
+                    Add(id, dco);
+                }
+            }
+            return result;
+        }
+
+        private bool EntityDirty(Type dataType, Guid id)
+        {
+            bool result = false;
+            if (ContainsKey(id))
+            {
+                DataObjectAttribute attribute = GetDataObjectAttribute(dataType);
+                string sql = string.Format("SELECT {2} FROM {0} WHERE {1} = @id", attribute.Table, attribute.KeyField, attribute.UpdatedField);
+                ParameterTable parameterTable = new ParameterTable();
+                parameterTable.Add("id", id);
+                DataTable table = CODataAccess.Main.Endpoint.ExecuteReader(sql, parameterTable);
+                if (table.Rows.Count == 1)
+                {
+                    DateTime updated = (DateTime)SqlUtils.FromSqlValue(typeof(DateTime), table.Rows[0][attribute.UpdatedField]);
+                    result = (updated > this[id].Loaded);
+                }
+                else
+                {
+                    result = true;
+                }
+            }
+            else
+            {
+                result = true;
             }
             return result;
         }

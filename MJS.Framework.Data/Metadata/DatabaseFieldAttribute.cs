@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using MJS.Framework.Data.Interfaces;
+using MJS.Framework.Base.Utils;
 
 namespace MJS.Framework.Data.Metadata
 {
@@ -59,41 +60,12 @@ namespace MJS.Framework.Data.Metadata
 
         private object FromSqlValue(Type type, object sqlValue)
         {
-            object value = null;
-            if (sqlValue == DBNull.Value)
-            {
-                value = null;
-            }
-            else if (type.IsEnum)
-            {
-                value = Enum.Parse(type, sqlValue as String);
-            }
-            else if (type == typeof(Guid))
-            {
-                value = new Guid(sqlValue.ToString());
-            }
-            else
-            {
-                value = sqlValue;
-            }
-            return value;
+            return SqlUtils.FromSqlValue(type, sqlValue);
         }
 
         private object ToSqlValue(object value)
         {
-            object sqlValue = null;
-            if (value != null)
-            {
-                if (value.GetType().IsEnum)
-                {
-                    sqlValue = value.ToString();
-                }
-                else
-                {
-                    sqlValue = value;
-                }
-            }
-            return sqlValue;
+            return SqlUtils.ToSqlValue(value);
         }
     }
 }

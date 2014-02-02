@@ -67,6 +67,7 @@
     <Compile Include="Utils\HttpUtils.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
     <Compile Include="Utils\RandomUtils.cs" />
+    <Compile Include="Utils\SqlUtils.cs" />
     <Compile Include="Utils\StreamUtils.cs" />
     <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\WindowsUtils.cs" />

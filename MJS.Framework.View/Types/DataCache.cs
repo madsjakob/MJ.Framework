@@ -77,19 +77,22 @@ namespace MJS.Framework.View.Types
             bool result = false;
             if (ContainsKey(id))
             {
-                DataObjectAttribute attribute = GetDataObjectAttribute(dataType);
-                string sql = string.Format("SELECT {2} FROM {0} WHERE {1} = @id", attribute.Table, attribute.KeyField, attribute.UpdatedField);
-                ParameterTable parameterTable = new ParameterTable();
-                parameterTable.Add("id", id);
-                DataTable table = CODataAccess.Main.Endpoint.ExecuteReader(sql, parameterTable);
-                if (table.Rows.Count == 1)
+                if (!this[id].EditState)
                 {
-                    DateTime updated = (DateTime)SqlUtils.FromSqlValue(typeof(DateTime), table.Rows[0][attribute.UpdatedField]);
-                    result = (updated > this[id].Loaded);
-                }
-                else
-                {
-                    result = true;
+                    DataObjectAttribute attribute = GetDataObjectAttribute(dataType);
+                    string sql = string.Format("SELECT {2} FROM {0} WHERE {1} = @id", attribute.Table, attribute.KeyField, attribute.UpdatedField);
+                    ParameterTable parameterTable = new ParameterTable();
+                    parameterTable.Add("id", id);
+                    DataTable table = CODataAccess.Main.Endpoint.ExecuteReader(sql, parameterTable);
+                    if (table.Rows.Count == 1)
+                    {
+                        DateTime updated = (DateTime)SqlUtils.FromSqlValue(typeof(DateTime), table.Rows[0][attribute.UpdatedField]);
+                        result = (updated > this[id].Loaded);
+                    }
+                    else
+                    {
+                        result = true;
+                    }
                 }
             }
             else
@@ -97,6 +100,18 @@ namespace MJS.Framework.View.Types
                 result = true;
             }
             return result;
+        }
+
+        private bool LockEntity(Type dataType, Guid id)
+        {
+            string sql = "INSERT INTO StatusEntity (EntityID, EntityName, AktoerID, Kategori) VALUES (@entityid, @entityname, @aktoerid, @kategori";
+            ParameterTable parameterTable = new ParameterTable();
+            parameterTable.Add("entityid", id);
+            parameterTable.Add("entityname", dataType.Name);
+            parameterTable.Add("aktoerid", Guid.Empty);
+            parameterTable.Add("kategori", -1);
+            CODataAccess.Main.Endpoint.ExecuteNonQuery(sql, parameterTable);
+            return false;
         }
 
         private DataObjectAttribute GetDataObjectAttribute(Type dataType)

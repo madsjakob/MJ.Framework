@@ -72,6 +72,36 @@ namespace MJS.Framework.View.Types
             return result;
         }
 
+        public bool SaveEntity(Type dataType, Guid id)
+        {
+            bool result = false;
+            if (ContainsKey(id) && this[id].EditState)
+            {
+                DataCacheObject dco = this[id];
+                DataObjectAttribute attribute = GetDataObjectAttribute(dataType);
+                string sql;
+                ParameterTable parameterTable = new ParameterTable();
+                if (id == Guid.Empty)
+                {
+                    sql = "INSERT INTO {0} ({1}, {2}, {3}) VALUES (@id, @blob, @updated)";
+                    id = Guid.NewGuid();
+                }
+                else
+                {
+                    sql = "UPDATE {0} SET {2} = @blob, {3} = @updated WHERE {1} = @id";
+                }
+                sql = string.Format(sql, attribute.Table, attribute.KeyField, attribute.BlobField, attribute.UpdatedField);
+
+                parameterTable.Add("id", id);
+                parameterTable.Add("blob", dco.Blobdata);
+                parameterTable.Add("updated", dco.Changed);
+                
+                CODataAccess.Main.Endpoint.ExecuteNonQuery(sql, parameterTable);
+                result = true;
+            }
+            return result;
+        }
+
         private bool EntityDirty(Type dataType, Guid id)
         {
             bool result = false;
@@ -115,14 +145,22 @@ namespace MJS.Framework.View.Types
 
         private bool LockEntity(Type dataType, Guid id)
         {
-            string sql = "INSERT INTO StatusEntity (EntityID, EntityName, AktoerID, Kategori) VALUES (@entityid, @entityname, @aktoerid, @kategori";
-            ParameterTable parameterTable = new ParameterTable();
-            parameterTable.Add("entityid", id);
-            parameterTable.Add("entityname", dataType.Name);
-            parameterTable.Add("aktoerid", Guid.Empty);
-            parameterTable.Add("kategori", -1);
-            CODataAccess.Main.Endpoint.ExecuteNonQuery(sql, parameterTable);
-            return false;
+            bool result = true;
+            try
+            {
+                string sql = "INSERT INTO StatusEntity (EntityID, EntityName, AktoerID, Kategori) VALUES (@entityid, @entityname, @aktoerid, @kategori";
+                ParameterTable parameterTable = new ParameterTable();
+                parameterTable.Add("entityid", id);
+                parameterTable.Add("entityname", dataType.Name);
+                parameterTable.Add("aktoerid", Guid.Empty);
+                parameterTable.Add("kategori", -1);
+                CODataAccess.Main.Endpoint.ExecuteNonQuery(sql, parameterTable);
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
         }
 
         private void UnlockEntity(Type dataType, Guid id)

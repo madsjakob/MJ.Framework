@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 namespace FrameWorkTest
 {
     [DataObject("Sag", "SagID", "Opdateret", BlobField = "Blobrec")]
-    public class DOSag : ViewObject
+    public class DOSag : ViewObject<int>
     {
-        
+        public DOSag(Guid id) : base(id)
+        {
+        }
     }
 }

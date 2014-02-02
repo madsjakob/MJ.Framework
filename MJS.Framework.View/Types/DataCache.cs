@@ -72,7 +72,7 @@ namespace MJS.Framework.View.Types
             return result;
         }
 
-        public Guid NewEntity(Type dataType)
+        public DataCacheObject NewEntity(Type dataType)
         {
             string sql = "INSERT INTO {0} ({1}, {2}, {3}) VALUES (@id, @blob, @updated)";
             ParameterTable parameterTable = new ParameterTable();
@@ -86,7 +86,7 @@ namespace MJS.Framework.View.Types
             CODataAccess.Main.Endpoint.ExecuteNonQuery(sql, parameterTable);
             Add(dco.ID, dco);
             LockEntity(dataType, dco.ID);
-            return dco.ID;
+            return dco;
         }
 
         public bool SaveEntity(Type dataType, Guid id)

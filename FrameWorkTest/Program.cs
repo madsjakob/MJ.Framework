@@ -11,7 +11,7 @@ namespace FrameWorkTest
     {
         static void Main(string[] args)
         {
-            ViewObject vo = new ViewObject();
+            ViewObject<int> vo = new ViewObject<int>(Guid.NewGuid());
 
             vo.SetValue("/root/name", "Mads Jakob Steffansen");
             vo.SetValue("/root/@id", Guid.NewGuid().ToString());

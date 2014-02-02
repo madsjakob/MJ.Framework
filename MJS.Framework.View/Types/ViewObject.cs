@@ -23,6 +23,10 @@ namespace MJS.Framework.View.Types
         public ViewObject(Guid id)
         {
             _data = DataCache.Cache.GetEntity(typeof(T), id);
+            if (_data == null)
+            {
+                _data = DataCache.Cache.NewEntity(typeof(T));
+            }
         }
 
         public bool Edit()
@@ -65,18 +69,9 @@ namespace MJS.Framework.View.Types
             get { return false; }
         }
 
-        public bool Load()
-        {
-            return false;
-        }
-
-        public void Save()
-        {
-        }
-
         public void SetValue(string xpath, string value)
         {
-            XmlNode node = _data.SelectSingleNode(xpath);
+            XmlNode node = _data.XmlData.SelectSingleNode(xpath);
             if (node == null)
             {
                 AddValue(xpath, value);
@@ -90,7 +85,7 @@ namespace MJS.Framework.View.Types
 
         public string GetValue(string xpath)
         {
-            XPathNavigator nav = _data.CreateNavigator();
+            XPathNavigator nav = _data.XmlData.CreateNavigator();
             return nav.GetValue(xpath);
         }
 
@@ -105,7 +100,7 @@ namespace MJS.Framework.View.Types
             }
 
             int index = xpathParts.Count;
-            XPathNavigator dataNav = _data.CreateNavigator();
+            XPathNavigator dataNav = _data.XmlData.CreateNavigator();
             XPathNavigator nav = null;
             while (nav == null && index > 0)
             {

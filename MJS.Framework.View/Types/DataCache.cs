@@ -114,6 +114,18 @@ namespace MJS.Framework.View.Types
             return false;
         }
 
+        private void UnlockEntity(Type dataType, Guid id)
+        {
+            string sql = "DELETE FROM StatusEntity WHERE entityID = @entityid AND EntityName = @entityname AND AktoerID = @aktoerid";
+            ParameterTable parameterTable = new ParameterTable();
+            parameterTable.Add("entityid", id);
+            parameterTable.Add("entityname", dataType.Name);
+            parameterTable.Add("aktoerid", Guid.Empty);
+            CODataAccess.Main.Endpoint.ExecuteNonQuery(sql, parameterTable);
+            
+            
+        }
+
         private DataObjectAttribute GetDataObjectAttribute(Type dataType)
         {
             DataObjectAttribute attribute = null;

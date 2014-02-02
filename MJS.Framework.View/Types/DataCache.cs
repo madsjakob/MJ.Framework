@@ -93,23 +93,11 @@ namespace MJS.Framework.View.Types
             {
                 DataCacheObject dco = this[id];
                 DataObjectAttribute attribute = GetDataObjectAttribute(dataType);
-                string sql;
+                string sql = string.Format("UPDATE {0} SET {2} = @blob, {3} = @updated WHERE {1} = @id", attribute.Table, attribute.KeyField, attribute.BlobField, attribute.UpdatedField);;
                 ParameterTable parameterTable = new ParameterTable();
-                if (id == Guid.Empty)
-                {
-                    sql = "INSERT INTO {0} ({1}, {2}, {3}) VALUES (@id, @blob, @updated)";
-                    id = Guid.NewGuid();
-                }
-                else
-                {
-                    sql = "UPDATE {0} SET {2} = @blob, {3} = @updated WHERE {1} = @id";
-                }
-                sql = string.Format(sql, attribute.Table, attribute.KeyField, attribute.BlobField, attribute.UpdatedField);
-
-                parameterTable.Add("id", id);
+                parameterTable.Add("id", dco.ID);
                 parameterTable.Add("blob", dco.Blobdata);
                 parameterTable.Add("updated", dco.Changed);
-                
                 CODataAccess.Main.Endpoint.ExecuteNonQuery(sql, parameterTable);
                 result = true;
             }

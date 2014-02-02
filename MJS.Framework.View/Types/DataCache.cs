@@ -72,6 +72,20 @@ namespace MJS.Framework.View.Types
             return result;
         }
 
+        public Guid NewEntity(Type dataType)
+        {
+            string sql = "INSERT INTO {0} ({1}, {2}, {3}) VALUES (@id, @blob, @updated)";
+            ParameterTable parameterTable = new ParameterTable();
+            DataCacheObject dco = new DataCacheObject();
+            dco.ID = Guid.NewGuid();
+            dco.Changed = DateTime.Now;
+            parameterTable.Add("id", dco.ID);
+            parameterTable.Add("blob", dco.Blobdata);
+            parameterTable.Add("updated", dco.Changed);
+            CODataAccess.Main.Endpoint.ExecuteNonQuery(sql, parameterTable);
+            return dco.ID;
+        }
+
         public bool SaveEntity(Type dataType, Guid id)
         {
             bool result = false;

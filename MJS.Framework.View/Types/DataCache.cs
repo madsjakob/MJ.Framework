@@ -102,6 +102,17 @@ namespace MJS.Framework.View.Types
             return result;
         }
 
+        private bool EntityLocked(Type dataType, Guid id)
+        {
+            string sql = "SELECT * FROM StatusEntity WHERE EntityID = @entityid AND EntityName = @entityname";
+            ParameterTable parameterTable = new ParameterTable();
+            parameterTable.Add("entityid", id);
+            parameterTable.Add("entityname", dataType.Name);
+            parameterTable.Add("aktoerid", Guid.Empty);
+            DataTable table = CODataAccess.Main.Endpoint.ExecuteReader(sql, parameterTable);
+            return table.Rows.Count > 0;
+        }
+
         private bool LockEntity(Type dataType, Guid id)
         {
             string sql = "INSERT INTO StatusEntity (EntityID, EntityName, AktoerID, Kategori) VALUES (@entityid, @entityname, @aktoerid, @kategori";

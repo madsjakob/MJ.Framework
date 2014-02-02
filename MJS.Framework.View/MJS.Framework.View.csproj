@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\DataCache.cs" />
+    <Compile Include="Types\DataObjectAttribute.cs" />
     <Compile Include="Types\ViewObject.cs" />
   </ItemGroup>
   <ItemGroup>

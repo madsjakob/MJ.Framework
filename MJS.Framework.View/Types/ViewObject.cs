@@ -9,7 +9,7 @@ using MJS.Framework.Base.Extensions;
 
 namespace MJS.Framework.View.Types
 {
-    public class ViewObject
+    public class ViewObject<T> 
     {
         // Must be able to load both indexfields and the blob
         // Must be able to save both indexfields and the blob
@@ -17,16 +17,31 @@ namespace MJS.Framework.View.Types
         // We need an ID to save to
         // Properties must be marked with an xpath and if necessary an indexfield
 
-        private Guid _id;
-        private Type _entityType;
-        private byte[] _blob;
-        private XmlDocument _data = new XmlDocument();
 
-        public override string ToString()
+        private DataCacheObject _data;
+
+        public ViewObject(Guid id)
         {
-            return _data.OuterXml;
+            _data = DataCache.Cache.GetEntity(typeof(T), id);
         }
 
+        public bool Edit()
+        {
+            return DataCache.Cache.LockEntity(typeof(T), _data.ID);
+        }
+
+        public void Save()
+        {
+            DataCache.Cache.SaveEntity(typeof(T), _data.ID);
+        }
+
+        public void Close()
+        {
+            DataCache.Cache.UnlockEntity(typeof(T), _data.ID);
+        }
+
+
+        
         private bool _changed = false;
         public bool Changed
         {

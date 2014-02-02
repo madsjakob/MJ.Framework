@@ -33,7 +33,7 @@ namespace MJS.Framework.View.Types
 
         private Dictionary<Guid, DataObjectAttribute> _mappingCache = new Dictionary<Guid,DataObjectAttribute>();
 
-        private DataCacheObject GetEntity(Type dataType, Guid id)
+        internal DataCacheObject GetEntity(Type dataType, Guid id)
         {
             DataCacheObject result = null;
             if(EntityDirty(dataType, id))
@@ -79,10 +79,13 @@ namespace MJS.Framework.View.Types
             DataCacheObject dco = new DataCacheObject();
             dco.ID = Guid.NewGuid();
             dco.Changed = DateTime.Now;
+            dco.EditState = true;
             parameterTable.Add("id", dco.ID);
             parameterTable.Add("blob", dco.Blobdata);
             parameterTable.Add("updated", dco.Changed);
             CODataAccess.Main.Endpoint.ExecuteNonQuery(sql, parameterTable);
+            Add(dco.ID, dco);
+            LockEntity(dataType, dco.ID);
             return dco.ID;
         }
 
@@ -145,7 +148,7 @@ namespace MJS.Framework.View.Types
             return table.Rows.Count > 0;
         }
 
-        private bool LockEntity(Type dataType, Guid id)
+        internal bool LockEntity(Type dataType, Guid id)
         {
             bool result = true;
             try
@@ -165,7 +168,7 @@ namespace MJS.Framework.View.Types
             return result;
         }
 
-        private void UnlockEntity(Type dataType, Guid id)
+        internal void UnlockEntity(Type dataType, Guid id)
         {
             string sql = "DELETE FROM StatusEntity WHERE entityID = @entityid AND EntityName = @entityname AND AktoerID = @aktoerid";
             ParameterTable parameterTable = new ParameterTable();

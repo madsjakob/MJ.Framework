@@ -30,6 +30,8 @@ namespace MJS.Framework.View.Types
             }
         }
 
+        private Dictionary<Guid, DataObjectAttribute> _mappingCache = new Dictionary<Guid,DataObjectAttribute>();
+
         public ViewObject LoadEntity<T>(Guid id)
         {
             if (!_cache.ContainsKey(id) || _cache[id].Dirty)
@@ -45,11 +47,7 @@ namespace MJS.Framework.View.Types
 
         private bool LoadEntity(Type dataType, Guid id)
         {
-            DataObjectAttribute attribute = (DataObjectAttribute)DataObjectAttribute.GetCustomAttribute(dataType, typeof(DataObjectAttribute));
-            if (attribute == null)
-            {
-                throw new Exception("Type " + dataType.Name + " not configured for DataCache");
-            }
+            DataObjectAttribute attribute = GetDataObjectAttribute(dataType);
             string sql = string.Format("SELECT * FROM {0} WHERE {1} = @id", attribute.Table, attribute.KeyField);
             ParameterTable parameterTable = new ParameterTable();
             parameterTable.Add("id", id);
@@ -65,6 +63,25 @@ namespace MJS.Framework.View.Types
                 dco.Blobdata = (byte[])row[attribute.BlobField];
             }
             return result;
+        }
+
+        private DataObjectAttribute GetDataObjectAttribute(Type dataType)
+        {
+            DataObjectAttribute attribute = null;
+            if (!_mappingCache.ContainsKey(dataType.GUID))
+            {
+                attribute = (DataObjectAttribute)DataObjectAttribute.GetCustomAttribute(dataType, typeof(DataObjectAttribute));
+                if (attribute == null)
+                {
+                    throw new Exception("Type " + dataType.Name + " not configured for DataCache");
+                }
+                _mappingCache.Add(dataType.GUID, attribute);
+            }
+            else
+            {
+                attribute = _mappingCache[dataType.GUID];
+            }
+            return attribute;
         }
     }
 }
